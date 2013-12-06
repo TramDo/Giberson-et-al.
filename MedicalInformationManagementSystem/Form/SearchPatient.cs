@@ -64,10 +64,10 @@ namespace MedicalInformationManagementSystem
 
             if (int.Parse(dtPatient.Rows[0][0].ToString()) > 0)
             {
-
                 ViewDemography cd = new ViewDemography();
                 cd.patientId = int.Parse(patientSearch.Text);
                 patientSearch.Clear();
+                cd.MdiParent = this.MdiParent;
                 cd.Show();
             }
             else
@@ -81,7 +81,7 @@ namespace MedicalInformationManagementSystem
                 {
                     
                     CreateDemForm create = new CreateDemForm();
-
+                    create.MdiParent = this.MdiParent;
                     create.Show();
                 }
             }
@@ -124,7 +124,8 @@ namespace MedicalInformationManagementSystem
             {
                 
                 ViewPatientEMR view = new ViewPatientEMR();
-                view.viewEMRPatientId = patientSearch.Text.ToString();          
+                view.viewEMRPatientId = patientSearch.Text.ToString();
+                view.MdiParent = this.MdiParent;
                 view.Show();
             }
             else
@@ -136,7 +137,6 @@ namespace MedicalInformationManagementSystem
 
         private void button2_Click(object sender, EventArgs e)
         {
-
             dictionary = createCheckPatientExistsDictionary(_mySearchId);
 
             dc = new DatabaseConnector();
@@ -146,6 +146,7 @@ namespace MedicalInformationManagementSystem
             {
                 int checkPat = int.Parse(patientSearch.Text);
                 EmrReport repo = new EmrReport();
+                repo.MdiParent = this.MdiParent;
                 repo.patientId = checkPat;
                 repo.Show();
             }
@@ -153,16 +154,14 @@ namespace MedicalInformationManagementSystem
             {
                 MessageBox.Show("Patient does not exist.");
             }
-            
-           
         }
 
 
         //Include it whenever using this calendar to any other form
-        public Dictionary<String, String> createCheckDailyReortExistsDictionary(String selectedDate)
+        public Dictionary<String, String> createCheckDailyReportExistsDictionary(String selectedDate)
         {
             Dictionary<String, String> dic = new Dictionary<string, string>();
-            dic.Add("@patientId", selectedDate);
+            dic.Add("@myDate", selectedDate); //patientId
             return dic;
         }
         public Dictionary<String, String> createDailyReportDictionary(String selectedDate)
@@ -181,7 +180,7 @@ namespace MedicalInformationManagementSystem
         private void button3_Click(object sender, EventArgs e)
         {
             String todaysDate = dateTimePicker1.Text.ToString();
-            dictionary = createCheckDailyReortExistsDictionary(todaysDate);
+            dictionary = createCheckDailyReportExistsDictionary(todaysDate);
             dc = new DatabaseConnector();
             dtReport = checkDailyReportExists(dictionary);
             if (int.Parse(dtReport.Rows[0][0].ToString()) > 0)
@@ -191,28 +190,21 @@ namespace MedicalInformationManagementSystem
                 dtReport = createDailyReport(dictionary);
                 DailyPatientReports dailyReport = new DailyPatientReports();
                 dailyReport.myDate = todaysDate;
+                dailyReport.MdiParent = this.MdiParent;
                 dailyReport.Show();
-
             }
             else
             {
                 MessageBox.Show("No Patient was treated on " + todaysDate + "\n Report do not exist!");
             }
             
-          
-            
-          
         }
-
- 
 
         private void button4_Click(object sender, EventArgs e)
         {
-
             if (comboBox1.SelectedItem == null)
             {
                 MessageBox.Show("No doctor has been selected");
-                
             }
             else
             {
@@ -224,6 +216,7 @@ namespace MedicalInformationManagementSystem
                 ScheduleList s = new ScheduleList();
                 s.doctorID = this.doctorID;
                 s.doctorName = comboBox1.SelectedItem.ToString();
+                s.MdiParent = this.MdiParent;
                 s.Show();
             }
         }
@@ -231,10 +224,8 @@ namespace MedicalInformationManagementSystem
         private void button5_Click(object sender, EventArgs e)
         {
             CreateDemForm create = new CreateDemForm();
-
+            create.MdiParent = this.MdiParent;
             create.Show();
         }
-
-        
     }
 }
